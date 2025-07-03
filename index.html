@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harris Pye - Project Manager</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* App Container */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #fbbf24;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .project-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+        }
+
+        .project-info h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #e5e7eb;
+        }
+
+        .project-info p {
+            font-size: 0.75rem;
+            color: #d1d5db;
+            line-height: 1.4;
+        }
+
+        /* Navigation */
+        .nav-menu {
+            flex: 1;
+            padding: 1.5rem 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: #fbbf24;
+        }
+
+        .nav-link i {
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Dashboard Styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .stat-card .change {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .change.positive {
+            color: #10b981;
+        }
+
+        .change.negative {
+            color: #ef4444;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .chart-container h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        /* Tasks Styles */
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tasks-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            background: white;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            width: 250px;
+        }
+
+        .tasks-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .task-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #e5e7eb;
+        }
+
+        .task-card.high {
+            border-left-color: #ef4444;
+        }
+
+        .task-card.medium {
+            border-left-color: #f59e0b;
+        }
+
+        .task-card.low {
+            border-left-color: #10b981;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .task-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .task-assignee {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-in-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Team Styles */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .team-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .team-avatar {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+        }
+
+        .team-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-role {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .team-stats {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 1rem;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .team-stat .value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .team-stat .label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: #4f46e5;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        /* Reports Styles */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .report-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        /* Settings Styles */
+        .settings-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6b7280;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #374151;
+        }
+
+        /* Connection Status Indicator */
+        .connection-status {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 0.875rem;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .connection-status.connected {
+            border-left: 4px solid #10b981;
+        }
+
+        .connection-status.disconnected {
+            border-left: 4px solid #ef4444;
+        }
+
+        .connection-status.syncing {
+            border-left: 44px solid #f59e0b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 1rem;
+            }
+
+            .nav-menu ul {
+                display: flex;
+                gap: 1rem;
+                min-width: max-content;
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tasks-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading and Error States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Auto-save indicator */
+        .save-indicator {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 0.875rem;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-hard-hat"></i>
+                    <h1>Harris Pye</h1>
+                </div>
+                <div class="project-info">
+                    <h3>Current Project</h3>
+                    <p>Aramco Sadqam Boilers Replacement</p>
+                    <p>Duration: 5 months</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-page="dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-page="tasks">
+                            <i class="fas fa-tasks"></i>
+                            Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-page="team">
+                            <i class="fas fa-users"></i>
+                            Team
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-page="timeline">
+                            <i class="fas fa-calendar-alt"></i>
+                            Timeline
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-page="reports">
+                            <i class="fas fa-chart-bar"></i>
+                            Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-page="settings">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <h2 id="pageTitle">Dashboard</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="projectManager.saveData()">
+                            <i class="fas fa-save"></i>
+                            Save Data
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddTaskModal()">
+                            <i class="fas fa-plus"></i>
+                            Add Task
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Tasks</h3>
+                            <div class="value" id="totalTasks">0</div>
+                            <div class="change positive">+2 this week</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Completed Tasks</h3>
+                            <div class="value" id="completedTasks">0</div>
+                            <div class="change positive">+1 this week</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>In Progress</h3>
+                            <div class="value" id="inProgressTasks">0</div>
+                            <div class="change">No change</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Team Members</h3>
+                            <div class="value" id="teamMembers">0</div>
+                            <div class="change">Active</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Project Progress</h3>
+                        <div id="progressChart">
+                            <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                                Progress visualization will be displayed here
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Recent Activities</h3>
+                        <div id="recentActivities">
+                            <div style="padding: 1rem; color: #6b7280; text-align: center;">
+                                Recent project activities will be shown here
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks Page -->
+                <div id="tasks" class="page">
+                    <div class="tasks-header">
+                        <div class="tasks-filters">
+                            <select class="filter-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                            <select class="filter-select" id="priorityFilter">
+                                <option value="">All Priority</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <input type="text" class="search-input" id="taskSearch" placeholder="Search tasks...">
+                        </div>
+                    </div>
+                    <div class="tasks-grid" id="tasksContainer">
+                        <!-- Tasks will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Team Page -->
+                <div id="team" class="page">
+                    <div class="team-grid" id="teamContainer">
+                        <!-- Team members will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Timeline Page -->
+                <div id="timeline" class="page">
+                    <div class="timeline" id="timelineContainer">
+                        <!-- Timeline items will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div id="reports" class="page">
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>Task Completion Rate</h3>
+                            <div id="completionRate" style="height: 200px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                                Completion rate chart will be displayed here
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Team Performance</h3>
+                            <div id="teamPerformance" style="height: 200px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                                Team performance metrics will be displayed here
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Project Timeline</h3>
+                            <div id="projectTimeline" style="height: 200px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                                Project timeline visualization will be displayed here
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Resource Allocation</h3>
+                            <div id="resourceAllocation" style="height: 200px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                                Resource allocation chart will be displayed here
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settings" class="page">
+                    <div class="settings-section">
+                        <h3>Project Settings</h3>
+                        <div class="form-group">
+                            <label for="projectName">Project Name</label>
+                            <input type="text" id="projectName" value="Aramco Sadqam Boilers Replacement">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDescription">Project Description</label>
+                            <textarea id="projectDescription">Complete replacement of boiler systems at Aramco Sadqam facility. This project involves comprehensive planning, procurement, installation, and testing phases.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectDuration">Project Duration (months)</label>
+                            <input type="number" id="projectDuration" value="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectStartDate">Start Date</label>
+                            <input type="date" id="projectStartDate" value="2024-01-15">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectEndDate">End Date</label>
+                            <input type="date" id="projectEndDate" value="2024-06-15">
+                        </div>
+                        <button class="btn btn-primary" onclick="projectManager.updateProjectSettings()">
+                            <i class="fas fa-save"></i>
+                            Update Settings
+                        </button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Data Management</h3>
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <button class="btn btn-secondary" onclick="projectManager.exportData()">
+                                <i class="fas fa-download"></i>
+                                Export Data
+                            </button>
+                            <button class="btn btn-secondary" onclick="document.getElementById('importFileInput').click()">
+                                <i class="fas fa-upload"></i>
+                                Import Data
+                            </button>
+                            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                        </div>
+                        <p style="font-size: 0.875rem; color: #6b7280;">
+                            Export your project data to share with team members or create backups. 
+                            Import data from previously exported files to restore or merge project information.
+                        </p>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Team Management</h3>
+                        <button class="btn btn-primary" onclick="showAddTeamMemberModal()">
+                            <i class="fas fa-user-plus"></i>
+                            Add Team Member
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Task</h3>
+                <button class="close-btn" onclick="hideAddTaskModal()">&times;</button>
+            </div>
+            <form id="addTaskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Task Title</label>
+                    <input type="text" id="taskTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskPriority">Priority</label>
+                    <select id="taskPriority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskStatus">Status</label>
+                    <select id="taskStatus" required>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskStartDate">Start Date</label>
+                    <input type="date" id="taskStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskEndDate">End Date</label>
+                    <input type="date" id="taskEndDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskAssignee">Assignee</label>
+                    <select id="taskAssignee" required>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="hideAddTaskModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Team Member Modal -->
+    <div id="addTeamMemberModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Team Member</h3>
+                <button class="close-btn" onclick="hideAddTeamMemberModal()">&times;</button>
+            </div>
+            <form id="addTeamMemberForm">
+                <div class="form-group">
+                    <label for="memberName">Full Name</label>
+                    <input type="text" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberRole">Role</label>
+                    <input type="text" id="memberRole" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberEmail">Email</label>
+                    <input type="email" id="memberEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberPhone">Phone</label>
+                    <input type="tel" id="memberPhone">
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="hideAddTeamMemberModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Connection Status Indicator -->
+    <div id="connectionStatus" class="connection-status disconnected">
+        <i class="fas fa-wifi"></i>
+        <span id="connectionText">Connecting...</span>
+    </div>
+
+    <!-- Save Indicator -->
+    <div id="saveIndicator" class="save-indicator">
+        <i class="fas fa-check"></i>
+        Data saved successfully
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script>
+        // Enhanced Firebase SDK loading with better error handling and mobile optimization
+        function loadFirebaseSDK() {
+            return new Promise((resolve, reject) => {
+                // Try to load local Firebase SDK files first
+                const appScript = document.createElement('script');
+                appScript.src = 'firebase-app-compat.js';
+                appScript.onload = () => {
+                    const dbScript = document.createElement('script');
+                    dbScript.src = 'firebase-database-compat.js';
+                    dbScript.onload = () => {
+                        console.log('Firebase SDK loaded from local files');
+                        resolve();
+                    };
+                    dbScript.onerror = () => {
+                        console.warn('Local Firebase SDK not found, falling back to CDN');
+                        loadFirebaseFromCDN().then(resolve).catch(reject);
+                    };
+                    document.head.appendChild(dbScript);
+                };
+                appScript.onerror = () => {
+                    console.warn('Local Firebase SDK not found, falling back to CDN');
+                    loadFirebaseFromCDN().then(resolve).catch(reject);
+                };
+                document.head.appendChild(appScript);
+            });
+        }
+
+        function loadFirebaseFromCDN() {
+            return new Promise((resolve, reject) => {
+                const appScript = document.createElement('script');
+                appScript.src = 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js';
+                appScript.onload = () => {
+                    const dbScript = document.createElement('script');
+                    dbScript.src = 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js';
+                    dbScript.onload = () => {
+                        console.log('Firebase SDK loaded from CDN');
+                        resolve();
+                    };
+                    dbScript.onerror = () => {
+                        console.warn('Failed to load Firebase SDK from CDN');
+                        reject(new Error('Firebase SDK not available'));
+                    };
+                    document.head.appendChild(dbScript);
+                };
+                appScript.onerror = () => {
+                    console.warn('Failed to load Firebase SDK from CDN');
+                    reject(new Error('Firebase SDK not available'));
+                };
+                document.head.appendChild(appScript);
+            });
+        }
+
+        // Initialize Firebase when SDK is loaded
+        let firebaseApp = null;
+        let firebaseDatabase = null;
+        let isFirebaseConnected = false;
+
+        loadFirebaseSDK().then(() => {
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDQJ5H8K9L2M3N4O5P6Q7R8S9T0U1V2W3X",
+                    authDomain: "harrispye-9d533.firebaseapp.com",
+                    databaseURL: "https://harrispye-9d533-default-rtdb.firebaseio.com",
+                    projectId: "harrispye-9d533",
+                    storageBucket: "harrispye-9d533.firebasestorage.app",
+                    messagingSenderId: "123456789012",
+                    appId: "1:123456789012:web:abcdef123456789012"
+                };
+
+                firebaseApp = firebase.initializeApp(firebaseConfig);
+                firebaseDatabase = firebase.database();
+                
+                // Set up connection monitoring
+                setupFirebaseConnectionMonitoring();
+                
+                console.log('Firebase initialized successfully');
+                updateConnectionStatus('connected', 'Connected to Firebase');
+            } catch (error) {
+                console.error('Firebase initialization failed:', error);
+                updateConnectionStatus('disconnected', 'Firebase initialization failed');
+            }
+        }).catch((error) => {
+            console.warn('Firebase SDK not available, using localStorage only:', error);
+            updateConnectionStatus('disconnected', 'Firebase not available - using local storage');
+        });
+
+        function setupFirebaseConnectionMonitoring() {
+            if (!firebaseDatabase) return;
+
+            // Monitor connection state
+            const connectedRef = firebaseDatabase.ref('.info/connected');
+            connectedRef.on('value', (snapshot) => {
+                if (snapshot.val() === true) {
+                    isFirebaseConnected = true;
+                    updateConnectionStatus('connected', 'Connected to Firebase');
+                    console.log('Firebase connected');
+                } else {
+                    isFirebaseConnected = false;
+                    updateConnectionStatus('disconnected', 'Disconnected from Firebase');
+                    console.log('Firebase disconnected');
+                }
+            });
+        }
+
+        function updateConnectionStatus(status, message) {
+            const statusElement = document.getElementById('connectionStatus');
+            const textElement = document.getElementById('connectionText');
+            
+            statusElement.className = `connection-status ${status}`;
+            textElement.textContent = message;
+        }
+    </script>
+
+    <script>
+        class ProjectManager {
+            constructor() {
+                this.data = {
+                    tasks: [],
+                    teamMembers: [],
+                    projectSettings: {
+                        name: "Aramco Sadqam Boilers Replacement",
+                        description: "Complete replacement of boiler systems at Aramco Sadqam facility. This project involves comprehensive planning, procurement, installation, and testing phases.",
+                        duration: 5,
+                        startDate: "2024-01-15",
+                        endDate: "2024-06-15"
+                    }
+                };
+
+                this.currentPage = 'dashboard';
+                this.autoSaveInterval = null;
+                this.syncQueue = [];
+                this.isSyncing = false;
+
+                this.init();
+            }
+
+            init() {
+                this.loadData();
+                this.setupEventListeners();
+                this.setupAutoSave();
+                this.setupFirebaseListeners();
+                this.updateDashboard();
+                this.renderTasks();
+                this.renderTeam();
+                this.renderTimeline();
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = link.getAttribute('data-page');
+                        this.navigateToPage(page);
+                    });
+                });
+
+                // Task filters
+                document.getElementById('statusFilter').addEventListener('change', () => this.filterTasks());
+                document.getElementById('priorityFilter').addEventListener('change', () => this.filterTasks());
+                document.getElementById('taskSearch').addEventListener('input', () => this.filterTasks());
+
+                // Forms
+                document.getElementById('addTaskForm').addEventListener('submit', (e) => this.handleAddTask(e));
+                document.getElementById('addTeamMemberForm').addEventListener('submit', (e) => this.handleAddTeamMember(e));
+
+                // Import file
+                document.getElementById('importFileInput').addEventListener('change', (e) => this.handleImportData(e));
+
+                // Auto-save on data changes
+                document.addEventListener('input', () => {
+                    clearTimeout(this.autoSaveTimeout);
+                    this.autoSaveTimeout = setTimeout(() => this.saveData(), 2000);
+                });
+
+                // Handle page visibility changes for mobile optimization
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) {
+                        // Page became visible, try to sync
+                        this.syncWithFirebase();
+                    }
+                });
+
+                // Handle online/offline events
+                window.addEventListener('online', () => {
+                    console.log('Device came online');
+                    this.syncWithFirebase();
+                });
+
+                window.addEventListener('offline', () => {
+                    console.log('Device went offline');
+                    updateConnectionStatus('disconnected', 'Device offline');
+                });
+            }
+
+            setupAutoSave() {
+                // Auto-save every 30 seconds
+                this.autoSaveInterval = setInterval(() => {
+                    this.saveData();
+                }, 30000);
+            }
+
+            setupFirebaseListeners() {
+                if (!firebaseDatabase) return;
+
+                // Listen for data changes from other clients
+                const dataRef = firebaseDatabase.ref('projectData');
+                dataRef.on('value', (snapshot) => {
+                    const remoteData = snapshot.val();
+                    if (remoteData && !this.isSyncing) {
+                        // Only update if the remote data is newer
+                        this.mergeRemoteData(remoteData);
+                    }
+                }, (error) => {
+                    console.error('Firebase listener error:', error);
+                });
+            }
+
+            mergeRemoteData(remoteData) {
+                let hasChanges = false;
+
+                // Merge tasks
+                if (remoteData.tasks) {
+                    remoteData.tasks.forEach(remoteTask => {
+                        const localIndex = this.data.tasks.findIndex(t => t.id === remoteTask.id);
+                        if (localIndex >= 0) {
+                            // Update existing task if remote is newer
+                            if (new Date(remoteTask.updatedAt || remoteTask.createdAt) > 
+                                new Date(this.data.tasks[localIndex].updatedAt || this.data.tasks[localIndex].createdAt)) {
+                                this.data.tasks[localIndex] = remoteTask;
+                                hasChanges = true;
+                            }
+                        } else {
+                            // Add new task
+                            this.data.tasks.push(remoteTask);
+                            hasChanges = true;
+                        }
+                    });
+                }
+
+                // Merge team members
+                if (remoteData.teamMembers) {
+                    remoteData.teamMembers.forEach(remoteMember => {
+                        const localIndex = this.data.teamMembers.findIndex(m => m.id === remoteMember.id);
+                        if (localIndex >= 0) {
+                            // Update existing member if remote is newer
+                            if (new Date(remoteMember.updatedAt || remoteMember.createdAt) > 
+                                new Date(this.data.teamMembers[localIndex].updatedAt || this.data.teamMembers[localIndex].createdAt)) {
+                                this.data.teamMembers[localIndex] = remoteMember;
+                                hasChanges = true;
+                            }
+                        } else {
+                            // Add new member
+                            this.data.teamMembers.push(remoteMember);
+                            hasChanges = true;
+                        }
+                    });
+                }
+
+                // Merge project settings
+                if (remoteData.projectSettings) {
+                    this.data.projectSettings = { ...this.data.projectSettings, ...remoteData.projectSettings };
+                    hasChanges = true;
+                }
+
+                if (hasChanges) {
+                    // Save to localStorage
+                    localStorage.setItem('harrisPyeProjectData', JSON.stringify(this.data));
+                    
+                    // Update UI
+                    this.updateDashboard();
+                    this.renderTasks();
+                    this.renderTeam();
+                    this.renderTimeline();
+                    
+                    console.log('Data merged from Firebase');
+                }
+            }
+
+            navigateToPage(page) {
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+                // Show/hide pages
+                document.querySelectorAll('.page').forEach(pageEl => {
+                    pageEl.classList.remove('active');
+                });
+                document.getElementById(page).classList.add('active');
+
+                // Update page title
+                const titles = {
+                    dashboard: 'Dashboard',
+                    tasks: 'Tasks',
+                    team: 'Team',
+                    timeline: 'Timeline',
+                    reports: 'Reports',
+                    settings: 'Settings'
+                };
+                document.getElementById('pageTitle').textContent = titles[page];
+
+                this.currentPage = page;
+
+                // Refresh page content
+                if (page === 'dashboard') this.updateDashboard();
+                if (page === 'tasks') this.renderTasks();
+                if (page === 'team') this.renderTeam();
+                if (page === 'timeline') this.renderTimeline();
+            }
+
+            updateDashboard() {
+                const totalTasks = this.data.tasks.length;
+                const completedTasks = this.data.tasks.filter(task => task.status === 'completed').length;
+                const inProgressTasks = this.data.tasks.filter(task => task.status === 'in-progress').length;
+                const teamMembers = this.data.teamMembers.length;
+
+                document.getElementById('totalTasks').textContent = totalTasks;
+                document.getElementById('completedTasks').textContent = completedTasks;
+                document.getElementById('inProgressTasks').textContent = inProgressTasks;
+                document.getElementById('teamMembers').textContent = teamMembers;
+            }
+
+            renderTasks() {
+                const container = document.getElementById('tasksContainer');
+                container.innerHTML = '';
+
+                this.data.tasks.forEach(task => {
+                    const assignee = this.data.teamMembers.find(member => member.id === task.assigneeId);
+                    const taskCard = document.createElement('div');
+                    taskCard.className = `task-card ${task.priority}`;
+                    taskCard.innerHTML = `
+                        <div class="task-header">
+                            <div>
+                                <div class="task-title">${task.title}</div>
+                                <div class="task-description">${task.description}</div>
+                            </div>
+                            <div>
+                                <span class="priority-badge priority-${task.priority}">${task.priority}</span>
+                            </div>
+                        </div>
+                        <div class="task-meta">
+                            <div class="task-assignee">
+                                <i class="fas fa-user"></i>
+                                ${assignee ? assignee.name : 'Unassigned'}
+                            </div>
+                            <span class="status-badge status-${task.status}">${task.status.replace('-', ' ')}</span>
+                        </div>
+                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                            ${task.startDate} - ${task.endDate}
+                        </div>
+                    `;
+                    container.appendChild(taskCard);
+                });
+
+                this.updateTaskAssigneeOptions();
+            }
+
+            renderTeam() {
+                const container = document.getElementById('teamContainer');
+                container.innerHTML = '';
+
+                this.data.teamMembers.forEach(member => {
+                    const memberTasks = this.data.tasks.filter(task => task.assigneeId === member.id);
+                    const completedTasks = memberTasks.filter(task => task.status === 'completed').length;
+                    
+                    const teamCard = document.createElement('div');
+                    teamCard.className = 'team-card';
+                    teamCard.innerHTML = `
+                        <div class="team-avatar">${member.name.charAt(0)}</div>
+                        <div class="team-name">${member.name}</div>
+                        <div class="team-role">${member.role}</div>
+                        <div class="team-stats">
+                            <div class="value">${memberTasks.length}</div>
+                            <div class="label">Tasks</div>
+                        </div>
+                        <div class="team-stat">
+                            <div class="value">${completedTasks}</div>
+                            <div class="label">Completed</div>
+                        </div>
+                    `;
+                    container.appendChild(teamCard);
+                });
+            }
+
+            renderTimeline() {
+                const container = document.getElementById('timelineContainer');
+                container.innerHTML = '';
+
+                // Sort tasks by start date
+                const sortedTasks = [...this.data.tasks].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
+                sortedTasks.forEach(task => {
+                    const assignee = this.data.teamMembers.find(member => member.id === task.assigneeId);
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = 'timeline-item';
+                    timelineItem.innerHTML = `
+                        <div class="timeline-date">${task.startDate} - ${task.endDate}</div>
+                        <div class="timeline-title">${task.title}</div>
+                        <div class="timeline-description">${task.description}</div>
+                        <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; align-items: center;">
+                            <span class="status-badge status-${task.status}">${task.status.replace('-', ' ')}</span>
+                            <span class="priority-badge priority-${task.priority}">${task.priority}</span>
+                            <span style="font-size: 0.75rem; color: #6b7280;">
+                                <i class="fas fa-user"></i> ${assignee ? assignee.name : 'Unassigned'}
+                            </span>
+                        </div>
+                    `;
+                    container.appendChild(timelineItem);
+                });
+            }
+
+            filterTasks() {
+                const statusFilter = document.getElementById('statusFilter').value;
+                const priorityFilter = document.getElementById('priorityFilter').value;
+                const searchTerm = document.getElementById('taskSearch').value.toLowerCase();
+
+                const taskCards = document.querySelectorAll('.task-card');
+                taskCards.forEach((card, index) => {
+                    const task = this.data.tasks[index];
+                    const matchesStatus = !statusFilter || task.status === statusFilter;
+                    const matchesPriority = !priorityFilter || task.priority === priorityFilter;
+                    const matchesSearch = !searchTerm || 
+                        task.title.toLowerCase().includes(searchTerm) ||
+                        task.description.toLowerCase().includes(searchTerm);
+
+                    if (matchesStatus && matchesPriority && matchesSearch) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            updateTaskAssigneeOptions() {
+                const select = document.getElementById('taskAssignee');
+                select.innerHTML = '<option value="">Select Assignee</option>';
+                
+                this.data.teamMembers.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.id;
+                    option.textContent = member.name;
+                    select.appendChild(option);
+                });
+            }
+
+            handleAddTask(e) {
+                e.preventDefault();
+                
+                const task = {
+                    id: 'task' + Date.now(),
+                    title: document.getElementById('taskTitle').value,
+                    description: document.getElementById('taskDescription').value,
+                    priority: document.getElementById('taskPriority').value,
+                    status: document.getElementById('taskStatus').value,
+                    startDate: document.getElementById('taskStartDate').value,
+                    endDate: document.getElementById('taskEndDate').value,
+                    assigneeId: document.getElementById('taskAssignee').value,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                this.data.tasks.push(task);
+                this.saveData();
+                this.renderTasks();
+                this.updateDashboard();
+                this.renderTimeline();
+                
+                hideAddTaskModal();
+                document.getElementById('addTaskForm').reset();
+            }
+
+            handleAddTeamMember(e) {
+                e.preventDefault();
+                
+                const member = {
+                    id: 'tm' + Date.now(),
+                    name: document.getElementById('memberName').value,
+                    role: document.getElementById('memberRole').value,
+                    email: document.getElementById('memberEmail').value,
+                    phone: document.getElementById('memberPhone').value,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                this.data.teamMembers.push(member);
+                this.saveData();
+                this.renderTeam();
+                this.updateDashboard();
+                this.updateTaskAssigneeOptions();
+                
+                hideAddTeamMemberModal();
+                document.getElementById('addTeamMemberForm').reset();
+            }
+
+            updateProjectSettings() {
+                this.data.projectSettings = {
+                    name: document.getElementById('projectName').value,
+                    description: document.getElementById('projectDescription').value,
+                    duration: parseInt(document.getElementById('projectDuration').value),
+                    startDate: document.getElementById('projectStartDate').value,
+                    endDate: document.getElementById('projectEndDate').value,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                this.saveData();
+                this.showSaveIndicator();
+            }
+
+            saveData() {
+                try {
+                    // Save to localStorage first (always works)
+                    localStorage.setItem('harrisPyeProjectData', JSON.stringify(this.data));
+                    
+                    // Try to sync with Firebase
+                    this.syncWithFirebase();
+                    
+                    this.showSaveIndicator();
+                } catch (error) {
+                    console.error('Save failed:', error);
+                }
+            }
+
+            syncWithFirebase() {
+                if (!firebaseDatabase || !isFirebaseConnected) {
+                    console.log('Firebase not available for sync');
+                    return;
+                }
+
+                this.isSyncing = true;
+                updateConnectionStatus('syncing', 'Syncing data...');
+
+                // Get the latest data from localStorage before pushing to Firebase
+                const latestLocalData = JSON.parse(localStorage.getItem('harrisPyeProjectData'));
+                if (!latestLocalData) {
+                    console.warn('No local data to sync to Firebase.');
+                    this.isSyncing = false;
+                    return;
+                }
+
+                firebaseDatabase.ref('projectData').set(latestLocalData)
+                    .then(() => {
+                        console.log('Data synced to Firebase');
+                        updateConnectionStatus('connected', 'Data synced successfully');
+                        this.isSyncing = false;
+                        this.syncQueue = []; // Clear queue on successful sync
+                    })
+                    .catch((error) => {
+                        console.error('Firebase sync failed:', error);
+                        updateConnectionStatus('disconnected', 'Sync failed - using local storage');
+                        this.isSyncing = false;
+                        
+                        // Add to sync queue for retry only if not already in queue
+                        if (this.syncQueue.length === 0 || JSON.stringify(this.syncQueue[this.syncQueue.length - 1]) !== JSON.stringify(latestLocalData)) {
+                            this.syncQueue.push(latestLocalData);
+                        }
+                        this.retrySync();
+                    });
+            }
+
+            retrySync() {
+                if (this.syncQueue.length === 0 || !isFirebaseConnected) return;
+
+                setTimeout(() => {
+                    if (this.syncQueue.length > 0 && isFirebaseConnected) {
+                        const dataToSync = this.syncQueue.shift(); // Get data from queue
+                        // Instead of calling syncWithFirebase, directly push the data from the queue
+                        // This prevents recursive calls and ensures the specific data that failed is retried
+                        this.isSyncing = true;
+                        updateConnectionStatus('syncing', 'Retrying sync...');
+                        firebaseDatabase.ref('projectData').set(dataToSync)
+                            .then(() => {
+                                console.log('Data from queue synced to Firebase');
+                                updateConnectionStatus('connected', 'Data synced successfully');
+                                this.isSyncing = false;
+                                this.retrySync(); // Try next item in queue
+                            })
+                            .catch((error) => {
+                                console.error('Firebase retry sync failed:', error);
+                                updateConnectionStatus('disconnected', 'Retry sync failed');
+                                this.isSyncing = false;
+                                // Re-add to queue if retry failed
+                                this.syncQueue.push(dataToSync);
+                                this.retrySync(); // Try again later
+                            });
+                    }
+                }, 5000); // Retry after 5 seconds
+            }
+
+            loadData() {
+                try {
+                    // Load from localStorage first
+                    this.loadFromLocalStorage();
+                                       // Then try to load from Firebase if available
+                    if (firebaseDatabase && isFirebaseConnected) { // Ensure Firebase is connected before attempting to load
+                        firebaseDatabase.ref('projectData').once('value')
+                            .then((snapshot) => {
+                                const firebaseData = snapshot.val();
+                                if (firebaseData) {
+                                    // Only merge if Firebase data is different from current local data
+                                    const localDataString = localStorage.getItem('harrisPyeProjectData');
+                                    const localData = localDataString ? JSON.parse(localDataString) : null;
+
+                                    if (JSON.stringify(firebaseData) !== JSON.stringify(localData)) {
+                                        this.mergeRemoteData(firebaseData);
+                                        console.log('Data loaded and merged from Firebase');
+                                    } else {
+                                        console.log('Local data is already up-to-date with Firebase.');
+                                    }
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Firebase load failed:', error);
+                            });
+                    }
+                } catch (error) {
+                    console.error('Load failed:', error);
+                    this.initializeDefaultData();
+                }
+            }
+
+            loadFromLocalStorage() {
+                const savedData = localStorage.getItem('harrisPyeProjectData');
+                if (savedData) {
+                    this.data = JSON.parse(savedData);
+                    console.log('Data loaded from localStorage');
+                } else {
+                    this.initializeDefaultData();
+                }
+            }
+
+            exportData() {
+                const dataStr = JSON.stringify(this.data, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `harris-pye-project-data-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+
+            handleImportData(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        
+                        // Merge imported data with existing data
+                        if (importedData.tasks) {
+                            importedData.tasks.forEach(task => {
+                                const existingIndex = this.data.tasks.findIndex(t => t.id === task.id);
+                                if (existingIndex >= 0) {
+                                    this.data.tasks[existingIndex] = task;
+                                } else {
+                                    this.data.tasks.push(task);
+                                }
+                            });
+                        }
+                        
+                        if (importedData.teamMembers) {
+                            importedData.teamMembers.forEach(member => {
+                                const existingIndex = this.data.teamMembers.findIndex(m => m.id === member.id);
+                                if (existingIndex >= 0) {
+                                    this.data.teamMembers[existingIndex] = member;
+                                } else {
+                                    this.data.teamMembers.push(member);
+                                }
+                            });
+                        }
+                        
+                        if (importedData.projectSettings) {
+                            this.data.projectSettings = { ...this.data.projectSettings, ...importedData.projectSettings };
+                        }
+                        
+                        this.saveData();
+                        this.updateDashboard();
+                        this.renderTasks();
+                        this.renderTeam();
+                        this.renderTimeline();
+                        
+                        alert('Data imported successfully!');
+                    } catch (error) {
+                        alert('Error importing data. Please check the file format.');
+                        console.error('Import error:', error);
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            showSaveIndicator() {
+                const indicator = document.getElementById('saveIndicator');
+                indicator.classList.add('show');
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 2000);
+            }
+
+            initializeDefaultData() {
+                if (this.data.teamMembers.length === 0) {
+                    this.data.teamMembers = [
+                        {
+                            id: "tm1",
+                            name: "Ahmed Al-Rashid",
+                            role: "Project Manager",
+                            email: "ahmed.rashid@harrispye.com",
+                            phone: "+966 50 123 4567",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        },
+                        {
+                            id: "tm2",
+                            name: "Sarah Johnson",
+                            role: "Technical Lead",
+                            email: "sarah.johnson@harrispye.com",
+                            phone: "+966 50 234 5678",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        },
+                        {
+                            id: "tm3",
+                            name: "Mohammed Al-Fahad",
+                            role: "Safety Coordinator",
+                            email: "mohammed.fahad@harrispye.com",
+                            phone: "+966 50 345 6789",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        }
+                    ];
+                }
+
+                if (this.data.tasks.length === 0) {
+                    this.data.tasks = [
+                        {
+                            id: "task1",
+                            title: "Site Survey and Assessment",
+                            description: "Conduct comprehensive site survey for boiler replacement project",
+                            priority: "high",
+                            status: "completed",
+                            startDate: "2024-01-15",
+                            endDate: "2024-01-30",
+                            assigneeId: "tm2",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        },
+                        {
+                            id: "task2",
+                            title: "Equipment Procurement",
+                            description: "Source and procure new boiler equipment according to specifications",
+                            priority: "high",
+                            status: "in-progress",
+                            startDate: "2024-02-01",
+                            endDate: "2024-03-15",
+                            assigneeId: "tm1",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        },
+                        {
+                            id: "task3",
+                            title: "Safety Protocol Development",
+                            description: "Develop comprehensive safety protocols for the replacement process",
+                            priority: "medium",
+                            status: "pending",
+                            startDate: "2024-02-15",
+                            endDate: "2024-03-01",
+                            assigneeId: "tm3",
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        }
+                    ];
+                }
+
+                this.saveData();
+                this.updateTaskAssigneeOptions();
+            }
+        }
+
+        // Modal functions
+        function showAddTaskModal() {
+            document.getElementById('addTaskModal').classList.add('active');
+        }
+
+        function hideAddTaskModal() {
+            document.getElementById('addTaskModal').classList.remove('active');
+        }
+
+        function showAddTeamMemberModal() {
+            document.getElementById('addTeamMemberModal').classList.add('active');
+        }
+
+        function hideAddTeamMemberModal() {
+            document.getElementById('addTeamMemberModal').classList.remove('active');
+        }
+
+        // Initialize the application
+        let projectManager;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            projectManager = new ProjectManager();
+        });
+    </script>
+</body>
+</html>
+
